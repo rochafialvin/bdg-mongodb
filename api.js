@@ -34,7 +34,7 @@ MongoClient.connect(URL, {useNewUrlParser: true, useUnifiedTopology: true}, (err
 
         }).catch(() => {
             res.send("Gagal init data")
-            
+
         })
     })
 
@@ -63,6 +63,42 @@ MongoClient.connect(URL, {useNewUrlParser: true, useUnifiedTopology: true}, (err
 
     })
 
+    // GET ALL DATA WITH 'QUERY'
+    app.get('/users/many', (req, res) => {
+
+        let {age} = req.query
+
+        age = parseInt(age)
+
+        db.collection('users').find({age}).toArray()
+            .then((resp) => {
+                res.send(resp)
+
+            }).catch((err) =>{
+                res.send(err)
+
+            })
+    })
+
+    // GET ONE DATA WITH 'QUERY'
+    app.get('/users/one', (req, res) => {
+        // req.query = {name, age}
+        let {age, name} = req.query
+
+        age = parseInt(age)
+
+        db.collection('users').findOne({ age, name})
+            .then((resp) => {
+                res.send(resp)
+
+            }).catch((err) => {
+                res.send(err)
+
+            })
+
+    })
+
+
     // POST DATA
     app.post('/users', (req, res) => {
 
@@ -80,6 +116,30 @@ MongoClient.connect(URL, {useNewUrlParser: true, useUnifiedTopology: true}, (err
                 res.send(err)
             })
 
+    })
+
+    // PUT (EDIT) DATA
+    app.put('/users/:name', (req, res) => {
+        //req.params.nama , KRITERIA
+
+        //req.body.name, DATA
+        //req.body.age
+        db.collection('users').updateOne({
+            name : req.params.name
+        }, {
+            $set: {
+                name: req.body.name,
+                age: req.body.age
+            }
+
+        }).then((resp) => {
+            res.send(resp)
+
+        }).catch((err) => {
+            res.send(err)
+
+        })
+        
     })
     
 })
