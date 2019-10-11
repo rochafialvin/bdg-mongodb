@@ -64,6 +64,12 @@ MongoClient.connect(URL, {useNewUrlParser: true, useUnifiedTopology: true}, (err
     })
 
     // GET ALL DATA WITH 'QUERY'
+
+    /*
+        1. Kirim pesan error ketika age kosong / tidak di isi data
+        2. Jika data tidak ditemukan maka kirim respon dalam bentuk object yang memiliki propert 'err'
+            templat pesan err = Data dengan umur ... tidak di temukan
+    */
     app.get('/users/many', (req, res) => {
 
         let {age} = req.query
@@ -81,6 +87,14 @@ MongoClient.connect(URL, {useNewUrlParser: true, useUnifiedTopology: true}, (err
     })
 
     // GET ONE DATA WITH 'QUERY'
+
+    /*
+        1. Kirim pesan error jika user tidak memberikan salah satu atau kedua data (name, age)
+            template err = Mohon isi data untuk properti 'name', 'age'
+        
+        2. Jika data tidak ditemukan, kirim object dg property 'err'
+            templat err = Tidak dapat menemukan user dengan nama ... dan umur ...
+    */
     app.get('/users/one', (req, res) => {
         // req.query = {name, age}
         let {age, name} = req.query
@@ -100,6 +114,11 @@ MongoClient.connect(URL, {useNewUrlParser: true, useUnifiedTopology: true}, (err
 
 
     // POST DATA
+
+    /*
+        1. Kirim pesan error jika name, role , age kosong
+            template err = Tolong isi data 'name', 'role', 'age'
+    */
     app.post('/users', (req, res) => {
 
         let {name, role, age} = req.body
@@ -141,6 +160,8 @@ MongoClient.connect(URL, {useNewUrlParser: true, useUnifiedTopology: true}, (err
         })
         
     })
+
+    // DELETE ONE USER BY AGE
     
 })
 
@@ -149,4 +170,3 @@ app.listen(port, () => {
     console.log("API berhasil running di port " + port)
 })
 
-// callback function pada listen akan di running saat berhasil menjalankan API
